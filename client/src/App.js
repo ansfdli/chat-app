@@ -1,6 +1,7 @@
 import './App.css';
 import io from "socket.io-client";
 import { useState } from 'react';
+import Chat from './Chat';
 
 const socket = io.connect("http://localhost:3001");
 
@@ -10,7 +11,7 @@ function App() {
 
   const joinRoom = () => {
     if (username !== "" && room !==""){
-      socket.emit("join_room", room)
+      socket.emit("join_room", room);
     }
   };
 
@@ -23,7 +24,9 @@ function App() {
       <input type="text" placeholder="Room ID..." onChange={(event) => {
         setRoom(event.target.value);
       }}/>
-      <button>Join A Room</button>
+      <button onClick={joinRoom}>Join A Room</button>
+
+      <Chat socket={socket} username={username} room={room} />
     </div>
   );
 }
