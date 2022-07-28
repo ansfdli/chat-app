@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Chat({ socket, username, room }) {
-  const [currentMessage, setCurentMessage] = useState("");
+  const [currentMessage, setCurrentMessage] = useState("");
 
   const sendMessage = async () => {
     if (currentMessage !== "") {
@@ -12,12 +12,18 @@ function Chat({ socket, username, room }) {
         time: 
         new Date(Date.now()).getHours() +
          ":" + 
-         new Date(Date.now()).getMinutes(),
+        new Date(Date.now()).getMinutes(),
       };
 
-      await socket.emit("sende_message", messageData);
+      await socket.emit("send_message", messageData);
     }
   };
+
+  useEffect(() => {
+    socket.on("recieve_message", (data) => {
+      console.log(data);
+    })
+  }, [socket]);
 
   return (
     <div>
@@ -26,7 +32,7 @@ function Chat({ socket, username, room }) {
       <div className="chat-body"></div>
       <div className="chat-footer">
         <input type="text" placeholder="Hey..." onChange={(event) => {
-        setCurentMessage(event.target.value);
+        setCurrentMessage(event.target.value);
       }} />
         <button onClick={sendMessage}>&#9658;</button>
       </div>
